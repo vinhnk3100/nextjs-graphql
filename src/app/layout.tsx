@@ -26,7 +26,7 @@ export default function RootLayout({
       </Head>
       <body className="bg-zinc-950">
         <ApolloProvider client={client}>
-          <NavbarComponents />
+          {/* <NavbarComponents /> */}
           <main className="mx-40">{children}</main>
           <Toaster />
         </ApolloProvider>

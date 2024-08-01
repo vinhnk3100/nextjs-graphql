@@ -1,6 +1,5 @@
+"use client"
 
 export default function Home() {
-  return (
-    <>Home Page</>
-  );
+  return <div className="text-white">Home Page</div>;
 }

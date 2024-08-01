@@ -9,14 +9,22 @@ import { useForm } from "react-hook-form";
 import { LoginSchema } from "@/schemas";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { CgSpinner } from "react-icons/cg";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import FormErrorComponents from "../../FormErrorComponents";
-import client from "@/lib/apollo-clients";
-import { AUTH_LOGIN } from "@/app/api/graphql/auth/mutation";
 import AuthService from "@/app/api/services/auth.services";
+import { Suspense, useState } from "react";
 
 export default function LoginForm() {
   const router = useRouter();
+  const [message, setMessage] = useState<string>();
+  const [loading, setLoading] = useState<boolean>(false);
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -26,10 +34,24 @@ export default function LoginForm() {
   });
 
   const handleSubmitForm = async (values: z.infer<typeof LoginSchema>) => {
-    const res = await AuthService.login(values);
-    console.log(res);
-    // Handle form submission logic here
-    // router.push("/");
+    const validateFields = LoginSchema.safeParse(values);
+    if (validateFields.success) {
+      const res = await AuthService.login(validateFields.data);
+      setLoading(true);
+      if (res.status) {
+        setMessage(res.message);
+        setLoading(false);
+        console.log(res);
+        return;
+      } else {
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
+        setMessage(res.message);
+      }
+    } else {
+      setMessage("Invalid Fields!");
+    }
   };
 
   return (
@@ -95,8 +117,8 @@ export default function LoginForm() {
                       </FormItem>
                     )}
                   />
+                  <FormErrorComponents message={message ? message : ""} />
                 </div>
-                {/* <FormErrorComponents message={"Invalid Credentials"}/> */}
                 <div className="flex flex-col gap-4">
                   <div>
                     <Button
@@ -121,7 +143,15 @@ export default function LoginForm() {
             <div className="mb-0 space-y-6 mt-4">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300" />
+                  {(!loading && (
+                    <div className="w-full border-t border-gray-300" />
+                  )) || (
+                    <>
+                      <div className="w-full border-t border-gray-300 mr-3" />
+                      <CgSpinner className="animate-spin text-white h-16 w-16" />
+                      <div className="w-full border-t border-gray-300 ml-3" />
+                    </>
+                  )}
                 </div>
                 <div className="relative flex justify-center text-sm"></div>
               </div>

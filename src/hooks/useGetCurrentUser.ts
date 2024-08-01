@@ -1,8 +1,10 @@
-import { GET_CURRENT_USER } from "@/app/api/graphql/user/queries"
-import { useQuery } from "@apollo/client"
+"use server"
 
-const useGetCurrentUser = () => {
-    return useQuery(GET_CURRENT_USER);
+import { auth } from "@/auth";
+
+const useGetCurrentUser = async () => {
+    const session = await auth();
+    return session;
 }
 
 export default useGetCurrentUser;
