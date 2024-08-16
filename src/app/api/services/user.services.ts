@@ -1,18 +1,12 @@
 import client from "@/lib/apollo-clients";
-import { GET_TODOS } from "../graphql/todo/queries";
-import { Todo } from "@/types/todos.type";
+import { GET_CURRENT_USER } from "../graphql/user/queries";
+import { CurrentUserOutput } from "@/types/user.type";
 
-interface ErrorResponse {
-  message: string;
-  status?: string;
-  statusCode?: number;
-}
-
-const TodoService = {
-  getMany: async (): Promise<Todo[] | ErrorResponse> => {
+const UserService = {
+  getCurrentUser: async (): Promise<CurrentUserOutput> => {
     try {
-      const { data } = await client.query({ query: GET_TODOS });
-      return data.todos;
+      const { data } = await client.query({ query: GET_CURRENT_USER });
+      return data.currentUser;
     } catch (error: any) {
       let extensions: { status?: string; statusCode?: number } = {};
       if (error.graphQLErrors || error.networkError) {
@@ -31,8 +25,8 @@ const TodoService = {
 
         return {
           message: errorMessage,
-          status: extensions.status,
-          statusCode: extensions.statusCode,
+          status: (extensions as any).status,
+          statusCode: (extensions as any).statusCode,
         };
       }
       throw null;
@@ -40,4 +34,4 @@ const TodoService = {
   },
 };
 
-export default TodoService;
+export default UserService;

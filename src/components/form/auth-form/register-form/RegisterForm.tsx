@@ -92,11 +92,6 @@ export default function RegisterForm() {
                 </div>
                 <div className="relative flex justify-center text-sm"></div>
               </div>
-              {/* <div>
-                <Button className="w-full bg-white text-gray-700 border border-gray-300 shadow-sm">
-                  Google
-                </Button>
-              </div> */}
             </form>
             <p className="mt-6 text-xs text-zinc-200">
               By clicking continue, you agree to our{" "}

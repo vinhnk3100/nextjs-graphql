@@ -2,16 +2,20 @@
 
 import { NavbarComponents } from "@/components/navbar";
 import "./globals.css";
-import client from "@/lib/apollo-clients";
 import { ApolloProvider } from "@apollo/client";
 import Head from "next/head";
 import { Toaster } from "@/components/ui/toaster";
+import { usePathname } from "next/navigation";
+import { authRoutes } from "@/routes";
+import { SessionProvider } from "next-auth/react";
+import client from "@/lib/apollo-clients";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
   return (
     <html lang="en">
       <head>
@@ -26,9 +30,11 @@ export default function RootLayout({
       </Head>
       <body className="bg-zinc-950">
         <ApolloProvider client={client}>
-          {/* <NavbarComponents /> */}
-          <main className="mx-40">{children}</main>
-          <Toaster />
+          <SessionProvider>
+            {!authRoutes.includes(pathname) && <NavbarComponents />}
+            <main className="text-zinc-200 mx-20">{children}</main>
+            <Toaster />
+          </SessionProvider>
         </ApolloProvider>
       </body>
     </html>

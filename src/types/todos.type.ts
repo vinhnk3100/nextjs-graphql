@@ -10,3 +10,27 @@ export type Todo = {
   status: "NOT_STARTED" | "IN_PROGRESS" | "DONE";
   username: string;
 };
+
+export type UpdateTodoDto = {
+  title: string;
+  content: string;
+  priority: "LOW" | "MEDIUM" | "HIGH";
+  status: "NOT_STARTED" | "IN_PROGRESS" | "DONE";
+  dateStart: Date;
+  dateEnd: Date;
+};
+
+export type CreateTodoDto = {
+  title: string;
+  content: string;
+  priority: "LOW" | "MEDIUM" | "HIGH";
+  status: "NOT_STARTED" | "IN_PROGRESS" | "DONE";
+  dateStart: Date;
+  dateEnd: Date;
+};
+
+export type TodoActionOutput = {
+  status: boolean;
+  message: string;
+  statusCode: number;
+}

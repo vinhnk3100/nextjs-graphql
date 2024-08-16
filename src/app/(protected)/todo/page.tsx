@@ -1,21 +1,26 @@
+"use client";
+
 // components/TodoComponents.server.tsx
 import { todoColumns, TodoDataTable } from "@/components/todos";
-import TodoService from "@/app/api/services/todo.services";
-import { auth } from "@/auth";
-import { Suspense } from "react";
 import { Todo } from "@/types/todos.type";
+import { useQuery } from "@apollo/client";
+import { GET_TODOS } from "@/app/api/graphql/todo/queries";
 
-export default async function TodoPage() {
-  const session = await auth();
-  const todos = await TodoService.getMany();
+export default function TodoPage() {
+  const { loading, error, data } = useQuery(GET_TODOS);
+  console.log(data);
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      {todos && (
-        <div className="bg-zinc-950 mt-10">
-          <TodoDataTable columns={todoColumns} data={todos as Todo[]} />
+    <>
+      {/* {loading ? (
+        <div className="bg-zinc-950 mt-10 text-white">
+          <TodoDataTable columns={todoColumns} data={[] as Todo[]} />{" "}
         </div>
-      )}
-    </Suspense>
+      ) : (
+        <div className="bg-zinc-950 mt-10 text-white">
+          <TodoDataTable columns={todoColumns} data={data?.todos as Todo[]} />{" "}
+        </div>
+      )} */}
+    </>
   );
 }

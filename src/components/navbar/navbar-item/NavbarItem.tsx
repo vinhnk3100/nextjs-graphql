@@ -26,7 +26,7 @@ export default function NavbarItem(props: INavbarItem) {
           {props.menuTitle}
         </NavigationMenuTrigger>
         <NavigationMenuContent>
-          <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-1 lg:w-[400px] bg-zinc-950 text-zinc-400">
+          <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-1 lg:w-[400px]">
             {props.listItems.map((listItem) => (
               <ListItem
                 className="hover:bg-transparent hover:text-zinc-200"

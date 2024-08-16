@@ -1,42 +1,21 @@
-"use client";
-
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  SortingState,
-  useReactTable,
-} from "@tanstack/react-table";
-
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import TodoAddDialog from "../todo-actions-dialog/TodoAddDialog";
+import { ColumnDef, ColumnFiltersState, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, SortingState, useReactTable } from "@tanstack/react-table";
+import { useState } from "react";
+import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 
-interface TodoDataTableProps<TData, TValue> {
+interface UserDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export default function TodoDataTable<TData, TValue>({
+export default function UserDataTable<TData, TValue>({
   columns,
   data,
-}: TodoDataTableProps<TData, TValue>) {
+}: UserDataTableProps<TData, TValue>) {
   const [pagination, setPagination] = useState({
     pageIndex: 0, //initial page index
     pageSize: 10, //default page size
@@ -67,16 +46,16 @@ export default function TodoDataTable<TData, TValue>({
         <div className="w-full">
           <Input
             placeholder="Filter title..."
-            value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+            value={
+              (table.getColumn("username")?.getFilterValue() as string) ?? ""
+            }
             onChange={(event) =>
-              table.getColumn("title")?.setFilterValue(event.target.value)
+              table.getColumn("username")?.setFilterValue(event.target.value)
             }
             className="max-w-sm"
           />
         </div>
-        <div className="flex gap-2">
-          <TodoAddDialog />
-        </div>
+        <div className="flex gap-2">{/* <TodoAddDialog /> */}</div>
       </div>
       <div className="rounded-sm border border-zinc-600">
         <Table>

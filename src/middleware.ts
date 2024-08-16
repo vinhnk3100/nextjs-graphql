@@ -1,36 +1,40 @@
-import NextAuth from "next-auth";
-import authConfig from "./config/auth.config";
-import { apiAuthPrefix, authRoutes, DEFAULT_LOGIN_REDIRECT, publicRoutes } from "./routes";
-import { NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-const { auth } = NextAuth(authConfig);
+import {
+  apiAuthPrefix,
+  authRoutes,
+  DEFAULT_LOGIN_REDIRECT,
+  publicRoutes,
+} from "./routes";
+import { NextRequest, NextResponse } from "next/server";
 
-export default auth((req): any => {
+export async function middleware(req: NextRequest) {
   const { nextUrl } = req;
-  const isLoggedIn = !!req.auth;
-
+  const token = await getToken({
+    req,
+    secret: process.env.NEXT_AUTH_SECRET_KEY,
+  } as any);
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
-
   if (isApiAuthRoute) {
     return null;
   }
 
   if (isAuthRoute) {
-    if (isLoggedIn) {
-      return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+    if (token) {
+      return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
     return null;
   }
 
-  if (!isLoggedIn && !isPublicRoute) {
-    return Response.redirect(new URL("/login", nextUrl));
+  if (!token && !isPublicRoute) {
+    return NextResponse.redirect(new URL("/login", nextUrl));
   }
 
-  return null;
-});
+  return NextResponse.next();
+}
 
 export const config = {
-  matcher: ['/((?!.+\\.[\\w]+$|_next).*)','/','/(api|trpc)(.*)'],
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 };

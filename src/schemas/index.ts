@@ -8,3 +8,16 @@ export const LoginSchema = z.object({
     message: "Password is required",
   }),
 });
+
+export const TodoSchema = z.object({
+  title: z.string().min(1, {
+    message: "Todo title is required",
+  }),
+  content: z.string().min(1, {
+    message: "Todo title is required",
+  }),
+  priority: z.enum(["LOW", "MEDIUM", "HIGH"]),
+  status: z.enum(["NOT_STARTED", "IN_PROGRESS", "DONE"]),
+  dateStart: z.date(),
+  dateEnd: z.date()
+});

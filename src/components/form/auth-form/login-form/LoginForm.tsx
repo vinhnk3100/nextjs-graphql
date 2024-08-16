@@ -1,4 +1,6 @@
-"use client";
+"use client"
+
+import { useSession, signIn, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
@@ -18,13 +20,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import FormErrorComponents from "../../FormErrorComponents";
-import AuthService from "@/app/api/services/auth.services";
-import { Suspense, useState } from "react";
+import { useState } from "react";
+import { toast } from "@/components/ui/use-toast";
 
 export default function LoginForm() {
   const router = useRouter();
   const [message, setMessage] = useState<string>();
-  const [loading, setLoading] = useState<boolean>(false);
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -34,20 +35,35 @@ export default function LoginForm() {
   });
 
   const handleSubmitForm = async (values: z.infer<typeof LoginSchema>) => {
+    setMessage("");
     const validateFields = LoginSchema.safeParse(values);
     if (validateFields.success) {
-      const res = await AuthService.login(validateFields.data);
-      setLoading(true);
-      if (res.status) {
-        setMessage(res.message);
-        setLoading(false);
+      try {
+        const res = await signIn("credentials", {
+          redirect: false,
+          username: validateFields.data.username,
+          password: validateFields.data.password,
+        });
         console.log(res);
-        return;
-      } else {
-        setTimeout(() => {
-          setLoading(false);
-        }, 1000);
-        setMessage(res.message);
+        if (res?.error) {
+          setMessage('Username or password is incorrect!');
+          return;
+        }
+        if (res?.ok) {
+          toast({
+            title: "Login Successfully!",
+            description: "Proceed to next page...",
+            variant: "success",
+            duration: 1000,
+          });
+          // router.push('/')
+          return;
+        } else {
+          setMessage("Failed to Login!");
+        }
+      } catch (error: any) {
+        console.log("Error: ", error);
+        setMessage(error.message);
       }
     } else {
       setMessage("Invalid Fields!");
@@ -143,7 +159,7 @@ export default function LoginForm() {
             <div className="mb-0 space-y-6 mt-4">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  {(!loading && (
+                  {/* {(!loading && (
                     <div className="w-full border-t border-gray-300" />
                   )) || (
                     <>
@@ -151,12 +167,15 @@ export default function LoginForm() {
                       <CgSpinner className="animate-spin text-white h-16 w-16" />
                       <div className="w-full border-t border-gray-300 ml-3" />
                     </>
-                  )}
+                  )} */}
                 </div>
                 <div className="relative flex justify-center text-sm"></div>
               </div>
               <div className="flex flex-row gap-6">
-                <Button className="w-full transition-all bg-white text-gray-700 border border-gray-300 shadow-sm">
+                <Button
+                  onClick={() => signIn("google", { callbackUrl: "/" })}
+                  className="w-full transition-all bg-white text-gray-700 border border-gray-300 shadow-sm"
+                >
                   <FcGoogle className="text-2xl" />
                 </Button>
                 <Button className="group transition-all w-full bg-white text-gray-700 border border-gray-300 shadow-sm">

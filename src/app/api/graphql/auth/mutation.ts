@@ -6,12 +6,22 @@ mutation loginAuth($input: LoginAuthDto!) {
     status
     message
     accessToken
-    user {
-      id
-      username
-      email
-      role
-    }
   }
-}
-`;
+}`;
+
+export const AUTH_GOOGLE_LOGIN = gql`
+mutation loginGoogleAuth($input: LoginGoogleAuthDto!) {
+  loginGoogleAuth(loginGoogleAuthDto: $input) {
+    status
+    message
+    accessToken
+  }
+}`;
+
+export const AUTH_REGISTER = gql`
+mutation registerUser($input: RegisterAuthDto!) {
+  registerAuth(registerAuthDto: $input) {
+    status
+    message
+  }
+}`;
