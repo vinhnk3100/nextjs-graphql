@@ -24,6 +24,7 @@ import { toast } from "../ui/use-toast";
 import { userRole } from "@/constants/user-list.constant";
 import useGetCurrentUser from "@/hooks/useCurrentUser";
 import { signOut } from "next-auth/react";
+import Link from "next/link";
 
 type PageProps = { title: string; href: string; description: string };
 
@@ -43,9 +44,14 @@ const listPages: PageProps[] = [
 
 const listManagementPages: PageProps[] = [
   {
-    title: "User management",
+    title: "Users management",
     href: "/users",
-    description: "User management pages for user with authority",
+    description: "Users management pages for user with authority",
+  },
+  {
+    title: "Posts management",
+    href: "/posts-manage",
+    description: "Posts management pages for user with authority",
   },
 ];
 
@@ -68,6 +74,7 @@ export default function NavbarComponents() {
     });
     return;
   };
+
   return (
     <nav className="bg-black py-3 relative">
       <div className="flex justify-between items-center">
@@ -116,9 +123,19 @@ export default function NavbarComponents() {
         </div>
         <div className="mx-20">
           <DropdownMenu>
-            <DropdownMenuTrigger className="outline-none">
-              <NavbarAvatar imgSrc={avatarProfile.imgSrc} />
-            </DropdownMenuTrigger>
+            {user ? (
+              <DropdownMenuTrigger className="outline-none">
+                <NavbarAvatar imgSrc={avatarProfile.imgSrc} />
+              </DropdownMenuTrigger>
+            ) : (
+              <Link
+                className="text-1xl text-zinc-400 border px-6 py-2 text-xl text-center rounded-sm border-zinc-800 hover:cursor-pointer hover:bg-zinc-800 hover:text-zinc-200"
+                href={"/login"}
+              >
+                Login
+              </Link>
+            )}
+
             <DropdownMenuContent
               align="end"
               className="w-60 bg-zinc-950 text-zinc-400 border border-zinc-800"

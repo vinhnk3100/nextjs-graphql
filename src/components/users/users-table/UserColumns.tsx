@@ -78,7 +78,6 @@ const userColumns: ColumnDef<UserProps>[] = [
         setDialogDeleteOpen(true);
       };
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      const { currentUser } = useCurrentUser();
       return (
         <>
           <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>

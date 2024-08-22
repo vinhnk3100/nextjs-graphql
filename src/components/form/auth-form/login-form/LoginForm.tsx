@@ -44,7 +44,6 @@ export default function LoginForm() {
           username: validateFields.data.username,
           password: validateFields.data.password,
         });
-        console.log(res);
         if (res?.error) {
           setMessage('Username or password is incorrect!');
           return;
@@ -62,7 +61,6 @@ export default function LoginForm() {
           setMessage("Failed to Login!");
         }
       } catch (error: any) {
-        console.log("Error: ", error);
         setMessage(error.message);
       }
     } else {

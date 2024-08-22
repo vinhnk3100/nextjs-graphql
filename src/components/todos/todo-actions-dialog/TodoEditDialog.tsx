@@ -1,4 +1,3 @@
-import TodoService from "@/app/api/services/todo.services";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -7,7 +6,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import {
@@ -41,7 +39,6 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useEffect, useState } from "react";
 import { useMutation } from "@apollo/client";
 import { UPDATE_TODO } from "@/app/api/graphql/todo/mutation";
 import { GET_TODOS } from "@/app/api/graphql/todo/queries";
@@ -72,7 +69,6 @@ export default function TodoEditDialog({
       dateEnd: new Date(data.dateEnd),
     },
   });
-
   const [editTodo, { loading: editLoading, error: editError }] = useMutation(
     UPDATE_TODO,
     {

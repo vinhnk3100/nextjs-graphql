@@ -8,11 +8,10 @@ import { GET_TODOS } from "@/app/api/graphql/todo/queries";
 
 export default function TodoPage() {
   const { loading, error, data } = useQuery(GET_TODOS);
-  console.log(data);
 
   return (
     <>
-      {/* {loading ? (
+      {loading ? (
         <div className="bg-zinc-950 mt-10 text-white">
           <TodoDataTable columns={todoColumns} data={[] as Todo[]} />{" "}
         </div>
@@ -20,7 +19,7 @@ export default function TodoPage() {
         <div className="bg-zinc-950 mt-10 text-white">
           <TodoDataTable columns={todoColumns} data={data?.todos as Todo[]} />{" "}
         </div>
-      )} */}
+      )}
     </>
   );
 }

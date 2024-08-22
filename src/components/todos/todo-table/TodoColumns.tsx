@@ -15,9 +15,9 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import TodoEditDialog from "../todo-actions-dialog/TodoEditDialog";
 import TodoDeleteDialog from "../todo-actions-dialog/TodoDeleteDialog";
-import useCurrentUser from "@/hooks/useCurrentUser";
 import { formatedDate } from "@/utils/date.utils";
 import { useState } from "react";
+import useGetCurrentUser from "@/hooks/useCurrentUser";
 
 const todoColumns: ColumnDef<Todo>[] = [
   {
@@ -127,12 +127,12 @@ const todoColumns: ColumnDef<Todo>[] = [
         setDialogDeleteOpen(true);
       };
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      const { currentUser } = useCurrentUser();
+      const { user, loading, error } = useGetCurrentUser();
       return (
         <>
           <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-            {currentUser?.username === todo.username ||
-            currentUser?.role === "admin" ? (
+            {user?.username === todo.username ||
+            user?.role === "admin" ? (
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"

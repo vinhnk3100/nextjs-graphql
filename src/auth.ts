@@ -33,7 +33,6 @@ export const {
               },
             },
           });
-          console.log("Data login: ", data);
           if (data?.loginAuth) {
             if (data.loginAuth.status === false) {
               // If the login was unsuccessful, throw an error
@@ -83,6 +82,10 @@ export const {
             },
           });
           if (data.loginGoogleAuth.status) {
+            // Store the access token in the user object
+            (user as any).accessToken = data.loginGoogleAuth.accessToken;
+            // You can also store additional information if needed
+            user.id = data.loginGoogleAuth.userId; // Assuming your API returns a userId
             return true;
           }
           return false;
@@ -96,6 +99,7 @@ export const {
     async jwt({ token, user }) {
       if (user) {
         token.accessToken = (user as any).accessToken;
+        token.id = user.id;
       }
       return token;
     },
